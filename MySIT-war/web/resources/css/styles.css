@@ -1,0 +1,18 @@
+/* 
+    Document   : styles
+    Created on : Oct 6, 2015, 1:16:22 PM
+    Author     : jack
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.nobordertable > tbody > tr,
+.nobordertable > tbody > tr > td{
+    border: none !important;
+    background: none !important
+}
+
+.panelbuttonmenu{
+    height: 25px;
+    width: 2em;
+}

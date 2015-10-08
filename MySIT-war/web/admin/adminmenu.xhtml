@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>System Administration</title>
+    </h:head>
+    <h:body>
+        <ui:composition>
+            <p:panel header="Administrator Menu">
+                <p:tieredMenu >
+                    <p:menuitem style="font-weight:#{selection eq 'System Users' ? 'bold':'normal'};" 
+                                value="System Users" outcome="/admin/pages/SystemUsers.xhtml"/>
+                    <p:menuitem style="font-weight:#{selection eq 'User Roles' ? 'bold':'normal'};" 
+                                value="User Roles" outcome="/admin/pages/UserRoles.xhtml"/>
+                </p:tieredMenu>
+            </p:panel>
+        </ui:composition>
+    </h:body>
+</html>
+

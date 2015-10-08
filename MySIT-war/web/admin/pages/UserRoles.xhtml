@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>System Administration</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/template/template.xhtml">
+            <ui:define name="leftpanel">
+                <c:set var="selection" value="User Roles" scope="request"/>
+                <ui:include src="/admin/adminmenu.xhtml"/>
+            </ui:define>
+            <ui:define name="rightpanel">
+                <h:form id="form">
+                    <p:growl id="msgs" showDetail="false"/>
+                    <p:panelGrid>
+                        <p:row>
+                            <p:column style="vertical-align: top;">
+                                <p:selectOneListbox id="roles" required="true" style="min-height: 200px;min-width: 400px;"
+                                                    value="#{userRoles.focusRole}" converter="RoleConverter">
+                                    <f:selectItems value="#{userRoles.roleList}" var="role" 
+                                                   itemLabel="#{role.name}" itemValue="#{role}"/>
+                                    <p:ajax event="change" update=":form:msgs users" process="roles"
+                                            listener="#{userRoles.roleSelectionChanged}"/>
+                                </p:selectOneListbox>
+                            </p:column>
+                            <p:column>
+                                <p:selectManyMenu id="users" style="min-height: 400px;min-width: 400px;"
+                                                  required="true"
+                                                  value="#{userRoles.selectedUsers}" converter="UserloginConverter">
+                                    <f:selectItems value="#{userRoles.focusRole.userloginList}" var="user"
+                                                   itemLabel="#{user.username}" itemValue="#{user}"/>
+                                </p:selectManyMenu>
+                            </p:column>
+                            <p:column style="text-align: left;vertical-align: top;">
+                                <p:commandButton process="roles @this :form:msgs" icon="ui-icon-plus"
+                                                 title="Add User"
+                                                 oncomplete="if (args &amp;&amp; !args.validationFailed) {PF('userlist').show();}"/>
+                                <p:commandButton process="roles users :form:msgs" icon="ui-icon-close"
+                                                 title="Remove User/s" update="users :form:msgs"
+                                                 action="#{userRoles.delete}"/>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                </h:form>
+                <p:dialog header="User List" widgetVar="userlist" modal="true" appendTo="@(body)">
+                    <h:form id="userlistForm">
+                        <p:panelGrid columns="2" styleClass="nobordertable">
+                            <p:outputLabel for="newusers" value="User:"/>
+                            <p:selectOneMenu id="newusers"
+                                                value="#{userRoles.newUser}" converter="UserloginConverter">
+                                <f:selectItems value="#{userRoles.userList}" var="user"
+                                               itemLabel="#{user.username}" itemValue="#{user}"/>
+                            </p:selectOneMenu>
+                            <p:commandButton value="Add" action="#{userRoles.addUserToRole}"
+                                             update=":form:users :form:msgs" oncomplete="PF('userlist').hide();"/>
+                        </p:panelGrid>
+                    </h:form>
+                </p:dialog>
+            </ui:define>
+        </ui:composition> 
+    </h:body>
+</html>
+

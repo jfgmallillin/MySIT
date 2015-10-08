@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>System Administration</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/template/template.xhtml">
+            <ui:define name="leftpanel">
+                <c:set var="selection" value="System Users" scope="request"/>
+                <ui:include src="/admin/adminmenu.xhtml"/>
+            </ui:define>
+            <ui:define name="rightpanel">
+                <h:form id="form">
+                    <p:growl id="msgs" showDetail="false"/>
+                    <p:dataTable value="#{systemUsers.userlist}" var="user" editable="true">
+                        <f:facet name="actions">
+                            <p:commandButton style="float:right;" styleClass="panelbuttonmenu"
+                                             icon="ui-icon-plus" title="Action"/>
+                        </f:facet>
+                        <p:ajax event="rowEdit" listener="#{systemUsers.onRowEdit}" update=":form:msgs"/>
+                        <p:column headerText="Username">
+                            <p:cellEditor>
+                                <f:facet name="input">
+                                    <p:inputText value="#{user.username}" label="Username"/>
+                                </f:facet>
+                                <f:facet name="output">
+                                    <h:outputText value="#{user.username}"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="Password">
+                            <p:cellEditor>
+                                <f:facet name="input">
+                                    <p:inputText id="password" value="#{user.password}" label="Password" readonly="true"/>
+                                    <p:commandButton icon="ui-icon-refresh" title="Reset Password"
+                                                     process="password"
+                                                     action="#{systemUsers.resetPassword(user)}"
+                                                     update="password"/>
+                                </f:facet>
+                                <f:facet name="output">
+                                    <h:outputText value="#{user.password}"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="Mobile No.">
+                            <p:cellEditor>
+                                <f:facet name="input">
+                                    <p:inputText value="#{user.mobileNo}" label="Mobile No."/>
+                                </f:facet>
+                                <f:facet name="output">
+                                    <h:outputText value="#{user.mobileNo}"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="Status">
+                            <p:cellEditor>
+                                <f:facet name="input">
+                                    <p:selectOneMenu value="#{user.status}" label="Status">
+                                        <f:selectItem itemLabel="Active" itemValue="1" />
+                                        <f:selectItem itemLabel="Locked" itemValue="2" />
+                                    </p:selectOneMenu>
+                                </f:facet>
+                                <f:facet name="output">
+                                    <h:outputText value="#{user.status eq 1 ? 'Active':'Locked'}"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column style="width:32px">
+                            <p:rowEditor />
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+                <p:dialog header="Create User" widgetVar="newuser" modal="true" appendTo="@(body)">
+                    <h:form id="userform">
+                        <p:panelGrid columns="2" styleClass="nobordertable">
+                            <p:outputLabel for="newuser" value="User:"/>
+                            <p:inputText id="newuser" value="#{systemUsers.newUser.username}" required="true"/>
+                            <p:outputLabel for="mobileno" value="Mobile No.:"/>
+                            <p:inputMask id="mobileno" mask="(0000) 000-0000" value="#{systemUsers.newUser.mobileNo}" required="true"/>
+                            <p:commandButton value="Add" action="#{systemUsers.add}"
+                                             update=":form" 
+                                             oncomplete="if (args &amp;&amp; !args.validationFailed) {PF('newuser').hide();}"/>
+                        </p:panelGrid>
+                    </h:form>
+                </p:dialog>
+            </ui:define>
+        </ui:composition> 
+    </h:body>
+</html>
+
